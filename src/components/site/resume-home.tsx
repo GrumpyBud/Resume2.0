@@ -109,7 +109,7 @@ export function ResumeHome({ profile }: ResumeHomeProps) {
           <SectionIntro
             eyebrow="Featured Work"
             title="Field-tested software, model evaluation, and real projects."
-            body="The strongest work comes first: robot autonomy, AI/ML experimentation, embedded systems, and a local conversational assistant built beyond a classroom demo."
+            body="Featured engineering work across robot autonomy, ML experimentation, embedded systems, and local AI tools."
           />
           <div className="mt-8 grid gap-5">
             {profile.featuredWork.map((project, index) => (
@@ -134,7 +134,14 @@ export function ResumeHome({ profile }: ResumeHomeProps) {
 
       <ResumeSectionBlock id="experience" title="Experience" sections={profile.evidence} />
 
-      <ResumeSectionBlock id="recognition" title="Recognition" sections={profile.recognition} />
+      <section id="recognition" className="mx-auto w-full max-w-6xl px-5 py-14 lg:py-20">
+        <h2 className="text-2xl font-semibold tracking-normal sm:text-3xl">Recognition</h2>
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          {profile.recognition.map((section) => (
+            <RecognitionCard key={section.title} section={section} />
+          ))}
+        </div>
+      </section>
 
       <section id="skills" className="border-y bg-card/55">
         <div className="mx-auto grid w-full max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[0.8fr_1.2fr] lg:py-20">
@@ -267,7 +274,7 @@ function FeaturedWorkCard({
         </div>
         <div>
           <h4 className="font-semibold tracking-normal">Technical Highlights</h4>
-          <ul className="mt-3 space-y-3 leading-7 text-muted-foreground">
+          <ul className="mt-3 space-y-3 pl-5 leading-7 text-muted-foreground [&>li]:list-disc [&>li]:marker:text-primary">
             {project.highlights.map((highlight) => (
               <li key={highlight}>{highlight}</li>
             ))}
@@ -343,6 +350,19 @@ function ArticleRow({ section }: { section: ResumeSection }) {
         ) : null}
       </div>
       <ul className="space-y-3 leading-7 text-muted-foreground">
+        {section.items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </article>
+  );
+}
+
+function RecognitionCard({ section }: { section: ResumeSection }) {
+  return (
+    <article className="rounded-lg border bg-card p-5 md:p-6">
+      <h3 className="font-semibold tracking-normal">{section.title}</h3>
+      <ul className="mt-3 space-y-2 pl-5 leading-7 text-muted-foreground [&>li]:list-disc [&>li]:marker:text-primary">
         {section.items.map((item) => (
           <li key={item}>{item}</li>
         ))}

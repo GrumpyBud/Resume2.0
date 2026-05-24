@@ -64,8 +64,6 @@ export const resumeProfile = {
     "Autonomous localization near 0.05 m / 0.1 rad",
     "Science Olympiad 1st Place, Competitive CAD",
     "Cisco Hack Camp Top Project Presenter",
-    "Led 6-student programming group",
-    "Created 8 technical teaching decks",
   ],
   featuredWork: [
     {
@@ -189,29 +187,26 @@ export const resumeProfile = {
   ],
   evidence: [
     {
-      title: "Autonomous Robot Software",
-      context: "FRC Team 1466",
+      title: "Head Programmer, FRC Team 1466",
+      context: "2024–present",
       items: [
-        "Led development of a Java/WPILib autonomous stack using Choreo trajectories, PIDF-controlled mechanisms, AprilTag-based 3D localization, pose estimation, and command-based sequencing.",
-        "Maintained localization accuracy near 0.05 meters and 0.1 radians during robot operation by integrating AprilTag vision, drivetrain odometry, and pose-estimation feedback.",
-        "Built a finite-state coordination layer for scoring, intake, and handoff workflows so autonomous and teleoperated routines could share robot-state architecture.",
+        "Own the Java/WPILib autonomous stack; full technical detail in Featured Work.",
+        "Coordinate software with CAD, drive team, and match strategy across the season.",
       ],
     },
     {
       title: "Technical Leadership",
       context: "Robotics teaching and competition",
       items: [
-        "Led a 6-student programming group through 8 technical slide decks and hands-on lessons covering robot software, controls, localization, and debugging.",
+        "Led a 6-student programming group through 8 technical slide decks covering robot software, controls, localization, and debugging.",
         "Co-led FTC Team 9934, a 15+ member team that won the 2024 Tennessee FTC State Championship.",
-        "Helped connect CAD, programming, driver feedback, and match strategy into buildable robot systems.",
       ],
     },
     {
       title: "Engineering Breadth",
       context: "Code, CAD, CAM, and hardware",
       items: [
-        "Designed robot mechanisms in Onshape, generated CAM in Fusion 360, and manufactured CNC parts for off-season projects.",
-        "Contributed to an FRC program recognized with the 2025 FIRST Engineering Inspiration Award and 2026 Judges Award.",
+        "Designed robot mechanisms in Onshape, generated CAM in Fusion 360, and machined CNC parts for off-season projects.",
         "Qualified for the FRC World Championship and competed with teams from more than 35 countries.",
       ],
     },
