@@ -1,43 +1,42 @@
 import {
   ArrowUpRight,
-  Bot,
   BrainCircuit,
   Code2,
   Cpu,
+  Download,
   GraduationCap,
+  GitBranch,
   Mail,
   MapPin,
   Medal,
-  GitBranch,
   Wrench,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useUiStore } from "@/stores/ui-store";
-import type { ResumeProfile, ResumeSection } from "../../../shared/resume-content";
+import type {
+  FeaturedWork,
+  ResumeProfile,
+  ResumeSection,
+} from "../../../shared/resume-content";
 
 type ResumeHomeProps = {
   profile: ResumeProfile;
-  dataSource: string;
 };
 
 const sectionIcons = {
-  robotics: Cpu,
-  "AI and ML": BrainCircuit,
+  "Autonomous Systems": Cpu,
+  "AI and ML Experimentation": BrainCircuit,
+  "Technical Leadership": Medal,
   "Programming": Code2,
+  "Robotics and embedded systems": Cpu,
   "CAD and manufacturing": Wrench,
+  "AI and machine learning": BrainCircuit,
 };
 
-export function ResumeHome({ profile, dataSource }: ResumeHomeProps) {
-  const activeTrack = useUiStore((state) => state.activeTrack);
-  const setActiveTrack = useUiStore((state) => state.setActiveTrack);
-
+export function ResumeHome({ profile }: ResumeHomeProps) {
   return (
     <main id="top">
-      <section className="mx-auto grid min-h-[calc(100svh-3.5rem)] w-full max-w-6xl gap-10 px-5 py-10 lg:grid-cols-[1.03fr_0.97fr] lg:items-center lg:py-14">
+      <section className="mx-auto grid min-h-[calc(100svh-3.5rem)] w-full max-w-6xl gap-10 px-5 py-10 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:py-14">
         <div className="flex flex-col gap-7">
           <div className="space-y-5">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
@@ -48,118 +47,101 @@ export function ResumeHome({ profile, dataSource }: ResumeHomeProps) {
               <span>{profile.education.graduation}</span>
             </div>
             <div className="space-y-4">
-              <h1 className="max-w-3xl text-5xl font-semibold tracking-[-0.04em] text-balance sm:text-6xl">
+              <h1 className="max-w-3xl text-5xl font-semibold tracking-normal text-balance sm:text-6xl">
                 {profile.name}
               </h1>
-              <p className="max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
+              <p className="max-w-[42rem] text-lg leading-8 text-muted-foreground sm:text-xl">
                 {profile.summary}
               </p>
             </div>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button nativeButton={false} render={<a href={`mailto:${profile.email}`} />} size="lg">
-              <Mail />
-              Email Owen
+            <Button
+              nativeButton={false}
+              render={<a href="/resume.pdf" download />}
+              size="lg"
+              className="h-11"
+            >
+              <Download />
+              Download Resume
             </Button>
             <Button
               nativeButton={false}
               render={<a href={profile.github.href} target="_blank" rel="noreferrer" />}
               variant="outline"
               size="lg"
+              className="h-11"
             >
               <GitBranch />
-              {profile.github.display}
+              GitHub
               <ArrowUpRight />
             </Button>
-          </div>
-
-          <div className="grid gap-3 border-y py-5 sm:grid-cols-2">
-            {profile.quickFacts.map((fact) => (
-              <div key={fact} className="text-sm font-medium text-foreground">
-                {fact}
-              </div>
-            ))}
+            <Button
+              nativeButton={false}
+              render={<a href={`mailto:${profile.email}`} />}
+              variant="outline"
+              size="lg"
+              className="h-11"
+            >
+              <Mail />
+              Email Owen
+            </Button>
           </div>
         </div>
 
-        <div className="relative">
-          <img
-            src="/robotics-workbench.png"
-            alt="Robotics workbench with code, machined parts, wiring, and control electronics"
-            className="aspect-[4/3] w-full rounded-lg border object-cover"
+        <aside aria-label="Resume proof points" className="rounded-lg border bg-card p-5 shadow-sm">
+          <p className="text-sm font-medium uppercase tracking-normal text-muted-foreground">
+            Proof points
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            {profile.quickFacts.map((fact) => (
+              <div key={fact} className="rounded-md border bg-background p-4">
+                <p className="text-sm font-semibold leading-6 text-foreground">{fact}</p>
+              </div>
+            ))}
+          </div>
+        </aside>
+      </section>
+
+      <section id="work" className="border-y bg-card/55">
+        <div className="mx-auto w-full max-w-6xl px-5 py-14 lg:py-20">
+          <SectionIntro
+            eyebrow="Featured Work"
+            title="Field-tested software, model evaluation, and real projects."
+            body="The strongest work comes first: robot autonomy, AI/ML experimentation, embedded systems, and a local conversational assistant built beyond a classroom demo."
           />
-          <div className="mt-4 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
-            <p>Autonomous stack, controls, localization, and hardware feedback.</p>
-            <p>AI and machine learning projects with model comparison and evaluation.</p>
+          <div className="mt-8 grid gap-5">
+            {profile.featuredWork.map((project, index) => (
+              <FeaturedWorkCard key={project.title} project={project} priority={index + 1} />
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="border-y bg-card/55">
-        <div className="mx-auto grid w-full max-w-6xl gap-6 px-5 py-8 md:grid-cols-[0.9fr_1.1fr]">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-[-0.03em]">What reviewers should notice first</h2>
-            <p className="mt-3 max-w-xl leading-7 text-muted-foreground">
-              The resume has three strong threads: robot autonomy, AI/ML experimentation, and technical leadership.
-            </p>
-          </div>
-          <Tabs value={activeTrack} onValueChange={setActiveTrack}>
-            <TabsList variant="line" className="w-full justify-start">
-              {profile.tracks.map((track) => (
-                <TabsTrigger key={track.id} value={track.id} className="flex-none px-3">
-                  {track.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            {profile.tracks.map((track) => (
-              <TabsContent key={track.id} value={track.id} className="pt-5">
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-lg font-semibold tracking-[-0.02em]">{track.title}</h3>
-                    <p className="mt-2 leading-7 text-muted-foreground">{track.summary}</p>
-                  </div>
-                  <ul className="space-y-3">
-                    {track.items.map((item) => (
-                      <li key={item} className="border-l-2 border-[var(--line-strong)] pl-4 leading-7">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </TabsContent>
-            ))}
-          </Tabs>
+      <section className="mx-auto w-full max-w-6xl px-5 py-14 lg:py-20">
+        <SectionIntro
+          eyebrow="Technical Focus"
+          title="Robot autonomy, ML experiments, and technical leadership."
+          body="My work connects robot autonomy, AI/ML experimentation, and technical leadership. I focus on systems that survive real-world constraints, from field-tested robot code to model evaluation and hands-on mentoring."
+        />
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {profile.technicalFocus.map((section) => (
+            <FocusCard key={section.title} section={section} />
+          ))}
         </div>
       </section>
 
       <ResumeSectionBlock id="experience" title="Experience" sections={profile.evidence} />
 
-      <section id="ai-collaboration" className="mx-auto w-full max-w-6xl px-5 py-12">
-        <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-          <div>
-            <div className="mb-4 flex items-center gap-3">
-              <Bot className="size-5 text-primary" />
-              <h2 className="text-2xl font-semibold tracking-[-0.03em]">AI collaboration</h2>
-            </div>
-            <p className="leading-7 text-muted-foreground">{profile.aiCollaboration.summary}</p>
-          </div>
-          <div className="divide-y rounded-lg border bg-card">
-            {profile.aiCollaboration.practices.map((practice) => (
-              <ArticleRow key={practice.title} section={practice} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <ResumeSectionBlock id="projects" title="Projects" sections={profile.projects} />
+      <ResumeSectionBlock id="recognition" title="Recognition" sections={profile.recognition} />
 
       <section id="skills" className="border-y bg-card/55">
-        <div className="mx-auto grid w-full max-w-6xl gap-8 px-5 py-12 lg:grid-cols-[0.7fr_1.3fr]">
+        <div className="mx-auto grid w-full max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[0.8fr_1.2fr] lg:py-20">
           <div>
             <div className="mb-4 flex items-center gap-3">
               <GraduationCap className="size-5 text-primary" />
-              <h2 className="text-2xl font-semibold tracking-[-0.03em]">Education and skills</h2>
+              <h2 className="text-2xl font-semibold tracking-normal">Education and Coursework</h2>
             </div>
             <div className="space-y-2 leading-7 text-muted-foreground">
               <p className="font-medium text-foreground">{profile.education.school}</p>
@@ -167,60 +149,166 @@ export function ResumeHome({ profile, dataSource }: ResumeHomeProps) {
               <p>{profile.education.gpa}</p>
               <p>{profile.education.graduation}</p>
             </div>
+            <div className="mt-7">
+              <h3 className="font-semibold tracking-normal">Coursework</h3>
+              <ul className="mt-3 space-y-2 leading-7 text-muted-foreground">
+                {profile.education.coursework.map((course) => (
+                  <li key={course}>{course}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {profile.skillGroups.map((group) => {
-              const Icon = sectionIcons[group.title as keyof typeof sectionIcons] ?? Code2;
 
-              return (
-                <section key={group.title} className="rounded-lg border bg-card p-5">
-                  <div className="mb-4 flex items-center gap-2">
-                    <Icon className="size-4 text-primary" />
-                    <h3 className="font-semibold tracking-[-0.02em]">{group.title}</h3>
-                  </div>
-                  <ul className="flex flex-wrap gap-x-3 gap-y-2 text-sm leading-6 text-muted-foreground">
-                    {group.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </section>
-              );
-            })}
-          </div>
-          <div className="lg:col-start-2">
-            <Separator className="mb-5" />
-            <h3 className="mb-3 font-semibold tracking-[-0.02em]">Coursework</h3>
-            <ul className="space-y-2 leading-7 text-muted-foreground">
-              {profile.education.coursework.map((course) => (
-                <li key={course}>{course}</li>
+          <div>
+            <h2 className="text-2xl font-semibold tracking-normal">Skills</h2>
+            <div className="mt-5 grid gap-4 md:grid-cols-2">
+              {profile.skillGroups.map((group) => (
+                <SkillCard key={group.title} group={group} />
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-6xl gap-8 px-5 py-12 lg:grid-cols-2">
-        <SummaryList icon={Medal} title="Leadership, competitions, and awards" sections={profile.awards} />
-        <SummaryList icon={Wrench} title="Training" sections={profile.training} />
+      <section id="workflow" className="mx-auto w-full max-w-6xl px-5 py-14 lg:py-20">
+        <div className="grid gap-8 rounded-lg border bg-card p-5 md:p-7 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <h2 className="text-2xl font-semibold tracking-normal">Engineering Workflow</h2>
+            <p className="mt-4 max-w-xl leading-7 text-muted-foreground">
+              {profile.engineeringWorkflow.summary}
+            </p>
+          </div>
+          <ul className="grid gap-3">
+            {profile.engineeringWorkflow.items.map((item) => (
+              <li key={item} className="rounded-md border bg-background p-4 leading-7 text-muted-foreground">
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
-      <section className="mx-auto w-full max-w-6xl px-5 pb-14">
-        <div className="flex flex-col justify-between gap-4 rounded-lg border bg-card p-5 sm:flex-row sm:items-center">
-          <div>
-            <h2 className="text-lg font-semibold tracking-[-0.02em]">Data layer</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{dataSource}</p>
+      <section className="mx-auto w-full max-w-6xl px-5 pb-16">
+        <div className="rounded-lg border bg-card p-6">
+          <h2 className="text-2xl font-semibold tracking-normal">Contact</h2>
+          <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
+            Robotics software, ML, and engineering projects.
+          </p>
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            <Button nativeButton={false} render={<a href={`mailto:${profile.email}`} />} className="h-11">
+              <Mail />
+              Email
+            </Button>
+            <Button
+              nativeButton={false}
+              render={<a href={profile.github.href} target="_blank" rel="noreferrer" />}
+              variant="outline"
+              className="h-11"
+            >
+              <GitBranch />
+              GitHub
+              <ArrowUpRight />
+            </Button>
+            <Button
+              nativeButton={false}
+              render={<a href="/resume.pdf" download />}
+              variant="outline"
+              className="h-11"
+            >
+              <Download />
+              Resume
+            </Button>
           </div>
-          <Tooltip>
-            <TooltipTrigger render={<Button variant="outline" />}>
-              Convex ready
-            </TooltipTrigger>
-            <TooltipContent>
-              The resume profile is seeded into Convex when you run the project command.
-            </TooltipContent>
-          </Tooltip>
         </div>
       </section>
     </main>
+  );
+}
+
+function SectionIntro({
+  eyebrow,
+  title,
+  body,
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="max-w-3xl">
+      <p className="text-sm font-medium uppercase tracking-normal text-muted-foreground">{eyebrow}</p>
+      <h2 className="mt-3 text-2xl font-semibold tracking-normal sm:text-3xl">{title}</h2>
+      <p className="mt-3 max-w-[44rem] leading-7 text-muted-foreground">{body}</p>
+    </div>
+  );
+}
+
+function FeaturedWorkCard({
+  project,
+  priority,
+}: {
+  project: FeaturedWork;
+  priority: number;
+}) {
+  return (
+    <article className="rounded-lg border bg-card p-5 md:p-6">
+      <div className="grid gap-6 lg:grid-cols-[0.35fr_0.65fr]">
+        <div>
+          <p className="text-sm font-medium text-primary">0{priority}</p>
+          <h3 className="mt-2 text-xl font-semibold tracking-normal">{project.title}</h3>
+          <p className="mt-1 text-sm text-muted-foreground">{project.context}</p>
+          <p className="mt-4 leading-7 text-muted-foreground">{project.subtitle}</p>
+          {project.role ? (
+            <MetaLine label="Role" value={project.role} />
+          ) : null}
+          {project.stack ? (
+            <MetaLine label="Stack" value={project.stack} />
+          ) : null}
+        </div>
+        <div>
+          <h4 className="font-semibold tracking-normal">Technical Highlights</h4>
+          <ul className="mt-3 space-y-3 leading-7 text-muted-foreground">
+            {project.highlights.map((highlight) => (
+              <li key={highlight}>{highlight}</li>
+            ))}
+          </ul>
+          {project.outcome ? (
+            <p className="mt-5 border-l-2 border-[var(--line-strong)] pl-4 leading-7 text-muted-foreground">
+              <span className="font-medium text-foreground">Outcome: </span>
+              {project.outcome}
+            </p>
+          ) : null}
+          {project.note ? (
+            <p className="mt-5 rounded-md border bg-background p-3 text-sm leading-6 text-muted-foreground">
+              {project.note}
+            </p>
+          ) : null}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function MetaLine({ label, value }: { label: string; value: string }) {
+  return (
+    <p className="mt-4 text-sm leading-6 text-muted-foreground">
+      <span className="font-medium text-foreground">{label}: </span>
+      {value}
+    </p>
+  );
+}
+
+function FocusCard({ section }: { section: ResumeSection }) {
+  const Icon = sectionIcons[section.title as keyof typeof sectionIcons] ?? Code2;
+
+  return (
+    <article className="rounded-lg border bg-card p-5">
+      <div className="mb-4 flex items-center gap-3">
+        <Icon className="size-5 text-primary" />
+        <h3 className="font-semibold tracking-normal">{section.title}</h3>
+      </div>
+      <p className="leading-7 text-muted-foreground">{section.items[0]}</p>
+    </article>
   );
 }
 
@@ -234,8 +322,8 @@ function ResumeSectionBlock({
   sections: ResumeSection[];
 }) {
   return (
-    <section id={id} className="mx-auto w-full max-w-6xl px-5 py-12">
-      <h2 className="text-2xl font-semibold tracking-[-0.03em]">{title}</h2>
+    <section id={id} className="mx-auto w-full max-w-6xl px-5 py-14 lg:py-20">
+      <h2 className="text-2xl font-semibold tracking-normal sm:text-3xl">{title}</h2>
       <div className="mt-6 divide-y rounded-lg border bg-card">
         {sections.map((section) => (
           <ArticleRow key={section.title} section={section} />
@@ -247,9 +335,9 @@ function ResumeSectionBlock({
 
 function ArticleRow({ section }: { section: ResumeSection }) {
   return (
-    <article className="grid gap-4 p-5 md:grid-cols-[0.35fr_0.65fr]">
+    <article className="grid gap-4 p-5 md:grid-cols-[0.35fr_0.65fr] md:p-6">
       <div>
-        <h3 className="font-semibold tracking-[-0.02em]">{section.title}</h3>
+        <h3 className="font-semibold tracking-normal">{section.title}</h3>
         {section.context ? (
           <p className="mt-1 text-sm text-muted-foreground">{section.context}</p>
         ) : null}
@@ -263,36 +351,20 @@ function ArticleRow({ section }: { section: ResumeSection }) {
   );
 }
 
-function SummaryList({
-  icon: Icon,
-  title,
-  sections,
-}: {
-  icon: typeof Medal;
-  title: string;
-  sections: ResumeSection[];
-}) {
+function SkillCard({ group }: { group: ResumeSection }) {
+  const Icon = sectionIcons[group.title as keyof typeof sectionIcons] ?? Code2;
+
   return (
     <section className="rounded-lg border bg-card p-5">
-      <div className="mb-5 flex items-center gap-3">
-        <Icon className="size-5 text-primary" />
-        <h2 className="text-xl font-semibold tracking-[-0.03em]">{title}</h2>
+      <div className="mb-4 flex items-center gap-2">
+        <Icon className="size-4 text-primary" />
+        <h3 className="font-semibold tracking-normal">{group.title}</h3>
       </div>
-      <div className="space-y-5">
-        {sections.map((section) => (
-          <div key={section.title}>
-            <h3 className="font-semibold tracking-[-0.02em]">{section.title}</h3>
-            {section.context ? (
-              <p className="mt-1 text-sm text-muted-foreground">{section.context}</p>
-            ) : null}
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
-              {section.items.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
+      <ul className="flex flex-wrap gap-x-3 gap-y-2 text-sm leading-6 text-muted-foreground">
+        {group.items.map((item) => (
+          <li key={item}>{item}</li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }

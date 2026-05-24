@@ -1,4 +1,4 @@
-import { Menu, X } from "lucide-react";
+import { Download, Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,9 +13,9 @@ import { useUiStore } from "@/stores/ui-store";
 import { ThemeMenu } from "./theme-menu";
 
 const navItems = [
+  { label: "Work", href: "#work" },
   { label: "Experience", href: "#experience" },
-  { label: "AI collaboration", href: "#ai-collaboration" },
-  { label: "Projects", href: "#projects" },
+  { label: "Recognition", href: "#recognition" },
   { label: "Skills", href: "#skills" },
 ];
 
@@ -26,7 +26,7 @@ export function SiteHeader() {
   return (
     <header className="no-print sticky top-0 z-40 border-b bg-background/92 backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-5">
-        <a href="#top" className="text-sm font-semibold tracking-[-0.01em]">
+        <a href="#top" className="text-sm font-semibold tracking-normal">
           Owen Tharp
         </a>
         <nav className="hidden items-center gap-5 text-sm text-muted-foreground md:flex">
@@ -37,6 +37,15 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
+          <Button
+            nativeButton={false}
+            render={<a href="/resume.pdf" download aria-label="Download resume PDF" />}
+            variant="outline"
+            className="hidden h-9 md:inline-flex"
+          >
+            <Download />
+            Resume
+          </Button>
           <ThemeMenu />
           <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
             <SheetTrigger render={<Button className="md:hidden" variant="outline" size="icon-lg" />}>
@@ -62,6 +71,15 @@ export function SiteHeader() {
                     {item.label}
                   </a>
                 ))}
+                <a
+                  href="/resume.pdf"
+                  download
+                  className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-md px-2 py-2 font-medium text-foreground hover:bg-muted"
+                  onClick={() => setMobileNavOpen(false)}
+                >
+                  <Download className="size-4" />
+                  Resume
+                </a>
               </nav>
             </SheetContent>
           </Sheet>

@@ -7,7 +7,7 @@ import { resumeProfile, type ResumeProfile } from "../../shared/resume-content";
 
 export function HomeRoute() {
   if (!convexClient) {
-    return <ResumeHome profile={resumeProfile} dataSource="Local fallback until Convex is configured" />;
+    return <ResumeHome profile={resumeProfile} />;
   }
 
   return <ConvexResumeHome />;
@@ -19,7 +19,6 @@ function ConvexResumeHome() {
   return (
     <ResumeHome
       profile={profile ?? resumeProfile}
-      dataSource={profile ? "Convex live query" : "Loading Convex data"}
     />
   );
 }
