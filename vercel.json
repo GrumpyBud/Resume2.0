@@ -1,0 +1,15 @@
+{
+  "env": {
+    "VITE_CONVEX_URL": "https://calculating-cobra-436.convex.cloud",
+    "VITE_CONVEX_SITE_URL": "https://calculating-cobra-436.convex.site"
+  },
+  "installCommand": "bun install",
+  "buildCommand": "bun run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
