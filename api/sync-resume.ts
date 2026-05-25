@@ -1,21 +1,26 @@
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { put } from "@vercel/blob";
 import { JWT } from "google-auth-library";
 
 export const config = { maxDuration: 60 };
 
-export default async function handler(request: Request): Promise<Response> {
+export default async function handler(
+  request: VercelRequest,
+  response: VercelResponse,
+): Promise<void> {
   const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
-  if (!process.env.CRON_SECRET || request.headers.get("authorization") !== expectedAuth) {
-    return new Response("Unauthorized", { status: 401 });
+  if (!process.env.CRON_SECRET || request.headers.authorization !== expectedAuth) {
+    response.status(401).send("Unauthorized");
+    return;
   }
 
   const credsRaw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
   const docId = process.env.GOOGLE_DOC_ID;
   if (!credsRaw || !docId) {
-    return Response.json(
-      { ok: false, error: "Missing GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_DOC_ID" },
-      { status: 500 },
-    );
+    response
+      .status(500)
+      .json({ ok: false, error: "Missing GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_DOC_ID" });
+    return;
   }
 
   const creds = JSON.parse(credsRaw) as { client_email: string; private_key: string };
@@ -27,7 +32,8 @@ export default async function handler(request: Request): Promise<Response> {
 
   const { token } = await jwt.getAccessToken();
   if (!token) {
-    return Response.json({ ok: false, error: "Failed to obtain access token" }, { status: 500 });
+    response.status(500).json({ ok: false, error: "Failed to obtain access token" });
+    return;
   }
 
   const exportUrl = `https://www.googleapis.com/drive/v3/files/${docId}/export?mimeType=application/pdf`;
@@ -37,10 +43,10 @@ export default async function handler(request: Request): Promise<Response> {
 
   if (!pdfResponse.ok) {
     const detail = await pdfResponse.text();
-    return Response.json(
-      { ok: false, error: `Drive export failed: ${pdfResponse.status}`, detail },
-      { status: 502 },
-    );
+    response
+      .status(502)
+      .json({ ok: false, error: `Drive export failed: ${pdfResponse.status}`, detail });
+    return;
   }
 
   const pdf = await pdfResponse.arrayBuffer();
@@ -53,7 +59,7 @@ export default async function handler(request: Request): Promise<Response> {
     cacheControlMaxAge: 60,
   });
 
-  return Response.json({
+  response.status(200).json({
     ok: true,
     url,
     bytes: pdf.byteLength,
