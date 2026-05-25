@@ -59,7 +59,7 @@ export function ResumeHome({ profile }: ResumeHomeProps) {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button
               nativeButton={false}
-              render={<a href="/resume.pdf" download />}
+              render={<a href="/api/resume" download />}
               size="lg"
               className="h-11"
             >
@@ -218,7 +218,7 @@ export function ResumeHome({ profile }: ResumeHomeProps) {
             </Button>
             <Button
               nativeButton={false}
-              render={<a href="/resume.pdf" download />}
+              render={<a href="/api/resume" download />}
               variant="outline"
               className="h-11"
             >
